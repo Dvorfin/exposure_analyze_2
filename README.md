@@ -17,7 +17,8 @@ Loads images, calculates histogram, math expectation and shows plots of distribu
 
 + **gs_and_gauss_converter_class.py** \
 Allows to load image and select part of the image to cut. Cutted part goes through Gauss filter, converting to GS and saves.
-+ **gs_and_gauss_converter_class.py** \
-##
+
++  ** ** 
+
 
 
