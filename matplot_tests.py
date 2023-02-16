@@ -63,6 +63,7 @@ img = cv.imread(pic_path)
 def foo(*args):
     for n in args:
         print(n)
+        # add to see commit chages
 
 
 # foo(1, 3, 5, 5, 6, 7)
