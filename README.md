@@ -3,7 +3,7 @@
 ### Modules:
 
 
-**HSV_analyzer.py** 
+**HSV_analyzer.py**\
 Converting image into HSV and allows in real time changing parametrs. 
 
 
