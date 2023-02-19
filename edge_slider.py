@@ -87,6 +87,49 @@ def show_two_plots(template, image, x_r, y_r, line):
     plt.plot(x_d, y_d)
     plt.show()
 
+def calc_diff(template, image, exp_name=None, destination=None):
+    y, x = image.shape
+    y_t, x_t = template.shape
+
+    min_range = min(x, x_t)  # минимальная ширина картинки
+
+    plt.ion()
+    plt.figure(figsize=(20, 12))
+
+    x_template = [i for i in range(min_range)]
+    line_t = y_t // 2
+    y_template = [template[line_t][i] for i in range(min_range)]
+    plt.subplot(3, 1, 1)
+    plt.title(f'bungard')
+    plt.plot(x_template, y_template)
+
+    x_img = [i for i in range(min_range)]  # x стоял
+    line_img = y // 2
+    y_img = [image[line_img][i] for i in range(min_range)]
+    plt.subplot(3, 1, 2)
+    if exp_name:
+        plt.title(f'{exp_name}')
+    else:
+        plt.title(f'Exp')
+    plt.plot(x_img, y_img)
+
+    plt.subplot(3, 1, 3)  # plot of difference between bingard and image
+    y_d = [abs(int(y_template[i]) - int(y_img[i])) for i in range(min_range)]
+    # y_d = [abs(y_template[i] - y_img[i]) for i in range(min_range)]
+
+    # y_d = [(avg_y_template[i] - avg_y_img[i]) for i in range(min_range)] # без абсолютной разницы
+    x_d = [i for i in range(len(y_d))]
+    plt.title(f'Difference: Max: {max(y_d)} Min: {min(y_d)}')
+    plt.plot(x_d, y_d)
+
+    # plot_path = 'C:/Users/Root/Documents/MEGAsync/diplom/02.04.2023/new_scans/edge_slice/plots/' + 'plot-' + exp_name
+    # путь куда сохраняются плоты
+    destination += exp_name
+
+    plt.savefig(destination, bbox_inches='tight')
+    plt.show()
+    plt.close('all')
+    print(f'Plot saved: {destination}')
 
 # функция высчитывает среднее значение линии
 # template - бунгард / image - изображение / exp_name - название картинки / destination - место сохранения плота
@@ -156,7 +199,8 @@ def save_plots_pictures(template, names, source, destination):
     for i in range(len(names)):
         img = cv.imread(source + names[i], 0)
         img = cv.rotate(img, cv.ROTATE_90_COUNTERCLOCKWISE)     # поворот изоображения на 90 градусов противчасовой
-        calc_avg_diff(template, img, names[i], destination)
+        #calc_avg_diff(template, img, names[i], destination)
+        calc_diff(template, img, names[i], destination)
 
     print('Work done!')
 
