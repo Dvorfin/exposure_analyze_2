@@ -87,6 +87,7 @@ def show_two_plots(template, image, x_r, y_r, line):
     plt.plot(x_d, y_d)
     plt.show()
 
+
 def calc_diff(template, image, exp_name=None, destination=None):
     y, x = image.shape
     y_t, x_t = template.shape

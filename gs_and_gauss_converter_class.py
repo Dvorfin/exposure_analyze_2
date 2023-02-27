@@ -9,7 +9,10 @@ pic_path = 'C:/Users/Root/Documents/MEGAsync/diplom/29.12.2022/cropped/3-8.tif'
 #pic_path = 'C:/Users/Root/Documents/MEGAsync/diplom/02.04.2023/new_scans/bungard.tif'
 pic_path = 'C:/Users/Root/Documents/MEGAsync/diplom/02.04.2023/new_scans/cropped.tif'
 pic_path = 'C:/Users/Root/Documents/MEGAsync/diplom/02.04.2023/scnitto/3-8.tiff'
+pic_path = 'C:/Users/Root/Documents/MEGAsync/diplom/scans/22.02.2023/scan0001.tif'
 # image_names = [str(i) + '.png' for i in range(6)]  # названия картинок к обработке
+pic_path = 'C:/Users/Root/Documents/MEGAsync/diplom/cropped.tif'
+
 
 class Crop:
 
@@ -95,7 +98,7 @@ class Crop:
         self.img_blur = self.img_blur[self.y1:self.y2, self.x1:self.x2]
         # self.img_blur = self.img[0:6476, 0:3898]
         self.img_blur = cv.GaussianBlur(self.img_blur, (25, 25), 5)     # применение фильтра гаусса
-        cv.imwrite('C:/Users/Root/Documents/MEGAsync/diplom/02.04.2023/new_scans/cropped.tif', self.img_blur, ((int(cv.IMWRITE_TIFF_RESUNIT), 2,
+        cv.imwrite('C:/Users/Root/Documents/MEGAsync/diplom/cropped.tif', self.img_blur, ((int(cv.IMWRITE_TIFF_RESUNIT), 2,
                                                                   int(cv.IMWRITE_TIFF_COMPRESSION), 1,
                                                                   int(cv.IMWRITE_TIFF_XDPI), 600,
                                                                   int(cv.IMWRITE_TIFF_YDPI), 600)))
