@@ -125,11 +125,14 @@ def calc_diff(template, image, exp_name=None, destination=None):
 
     # plot_path = 'C:/Users/Root/Documents/MEGAsync/diplom/02.04.2023/new_scans/edge_slice/plots/' + 'plot-' + exp_name
     # путь куда сохраняются плоты
+    if destination is None:
+        print('Destination path is None')
     destination += exp_name
-
+    #
     plt.savefig(destination, bbox_inches='tight')
     plt.show()
-    plt.close('all')
+    cv.waitKey(0)
+    #plt.close('all')
     print(f'Plot saved: {destination}')
 
 # функция высчитывает среднее значение линии
@@ -211,7 +214,7 @@ if __name__ == '__main__':
     # calc_avg_diff(template_bungard, img, 'jopa')
 
     # путь к эталону
-    template_bungard = cv.imread('C:/Users/Root/Documents/MEGAsync/diplom/02.04.2023/new_scans/bungard.tif', 0)
+    template_bungard = cv.imread('C:/Users/Root/Documents/MEGAsync/diplom/scans/29.12.2022/bungard.tif', 0)
 
     pic_names = ['3-3-g.tif', '3-4-g.tif', '3-8-g.tif', '3-11-g.tif',   # названия изображений
              '3-12-g.tif', '3-15-g.tif', '3-16-g.tif', '4-1-1-g.tif',
@@ -223,7 +226,11 @@ if __name__ == '__main__':
     # путь, куда сохранять плоты
     plot_path = 'C:/Users/Root/Documents/MEGAsync/diplom/02.04.2023/new_scans/edge_slice/plots/plot-'
 
-    save_plots_pictures(template_bungard, pic_names, path, plot_path)
+    img = cv.imread('C:/Users/Root/Documents/MEGAsync/diplom/scans/29.12.2022/edge_slice_second/3-3.tif', 0)
+
+    calc_diff(template_bungard, img, '1', 'C:/Users/Root/Desktop/template_maker/')
+
+    #save_plots_pictures(template_bungard, pic_names, path, plot_path)
 
 
     # while True:

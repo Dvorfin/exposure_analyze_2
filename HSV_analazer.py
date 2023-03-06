@@ -24,6 +24,12 @@ import math
 # hsv_min = np.array((98, 160, 0), np.uint8)
 # hsv_max = np.array((255, 171, 254), np.uint8)
 
+# hsv_min = np.array((98, 165, 0), np.uint8)
+# hsv_max = np.array((107, 172, 255), np.uint8)
+
+# hsv_min = np.array((0, 0, 0), np.uint8)
+# hsv_max = np.array((0, 255, 255), np.uint8)
+
 hsv_min = np.array((85, 0, 0), np.uint8)
 hsv_max = np.array((107, 172, 255), np.uint8)
 
@@ -48,9 +54,10 @@ def crop_rect(img, rect):
     return img_crop
 
 
-if __name__ == '__main__':
-    fn = 'C:/Users/Root/Documents/MEGAsync/diplom/scans/22.02.2023/scan0004.tif'  # имя файла, который будем анализировать
+if __name__ == '__main_8_':
+    fn = 'C:/Users/Root/Documents/MEGAsync/diplom/scans/22.02.2023/scan0002.tif'  # имя файла, который будем анализировать
     #fn = 'C:/Users/Root/Documents/MEGAsync/diplom/scans/22.02.2023/crop_8.tif'  # имя файла, который будем анализировать
+    fn = 'C:/Users/Root/Documents/MEGAsync/diplom/scans/29.12.2022/0.tif'
     img = cv.imread(fn)
 
     cv.namedWindow("result", cv.WINDOW_NORMAL)  # создаем главное окно
@@ -78,7 +85,15 @@ if __name__ == '__main__':
             cropped_img = crop_rect(img, rect)
 
             cv.drawContours(img, [box], 0, (255, 0, 0), 8)      # отрисовка прямогуольников размером больше 700_000
-            cv.imwrite('C:/Users/Root/Documents/MEGAsync/diplom/scans/22.02.2023/crop_new' + f'{cropped_img_num}.tif', cropped_img)
+            #cv.imwrite('C:/Users/Root/Documents/MEGAsync/diplom/scans/22.02.2023/crop_new' + f'{cropped_img_num}.tif', cropped_img)
+
+            cv.imwrite('C:/Users/Root/Documents/MEGAsync/diplom/scans/22.02.2023/crop_new' + f'{cropped_img_num}.tif', cropped_img,
+                       ((int(cv.IMWRITE_TIFF_RESUNIT), 2,
+                         int(cv.IMWRITE_TIFF_COMPRESSION), 1,
+                         int(cv.IMWRITE_TIFF_XDPI), 600,
+                         int(cv.IMWRITE_TIFF_YDPI), 600)))
+
+
             cropped_img_num += 1
 
     cv.imshow('result', img)
@@ -151,9 +166,11 @@ def HSV_analyzer():
     fn = 'C:/Users/Root/Documents/MEGAsync/diplom/scans/29.12.2022/cropped/3-4.tif'
     fn = 'C:/Users/Root/Documents/MEGAsync/diplom/scans/22.02.2023/Screenshot_8.png'
     fn = 'C:/Users/Root/Documents/MEGAsync/diplom/scans/22.02.2023/scan0002.tif'
-    #fn = 'C:/Users/Root/Documents/MEGAsync/diplom/scans/22.02.2023/crop_1.tif'
+    #fn = 'C:/Users/Root/Documents/MEGAsync/diplom/scans/22.02.2023/3-3-29.tif'
+    fn = 'C:/Users/Root/Documents/MEGAsync/diplom/scans/22.02.2023/res/overlaped.tif'
 
     img = cv2.imread(fn)
+    img = cv2.medianBlur(img, 21)
 
     #cv2.imshow(img)
     print(img.shape)
@@ -193,6 +210,9 @@ def HSV_analyzer():
 
         # накладываем фильтр на кадр в модели HSV
         thresh = cv2.inRange(hsv, h_min, h_max)
+
+
+        #blur = cv2.medianBlur(thresh, 21)
        # cv2.resizeWindow('result', 1000, 1000)  # уменьшаем картинку в 3 раза
         cv2.imshow('result', thresh)
 
@@ -204,4 +224,64 @@ def HSV_analyzer():
     cv2.destroyAllWindows()
 # -------------------------------------------
 
-HSV_analyzer()
+def binarization():
+    fn = 'C:/Users/Root/Documents/MEGAsync/diplom/scans/22.02.2023/res/overlaped.tif'
+    #fn = 'C:/Users/Root/Documents/MEGAsync/diplom/scans/22.02.2023/3-3-29.tif'
+    fn = 'C:/Users/Root/Documents/MEGAsync/diplom/scans/22.02.2023/res/crop_new1.tif'
+    dn = 'C:/Users/Root/Documents/MEGAsync/diplom/scans/29.12.2022/cropped/3-3.tif'
+    img = cv2.imread(fn)
+
+    #img = cv.GaussianBlur(img, (25, 25), 9)
+    #img = cv2.medianBlur(img, 21)
+
+    y_range, x_range, _ = img.shape
+
+    cv2.namedWindow("result", cv2.WINDOW_NORMAL)  # создаем главное окно
+    cv2.resizeWindow('result', int(x_range // 7), int(y_range // 7))  # уменьшаем картинку в 3 раза
+    cv2.namedWindow("settings")  # создаем окно настроек
+
+
+    # создаем 6 бегунков для настройки начального и конечного цвета фильтра
+    cv2.createTrackbar('low', 'settings', 0, 255, nothing)
+    cv2.createTrackbar('high', 'settings', 0, 255, nothing)
+
+    cv2.resizeWindow('settings', 700, 140)
+    img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+    while True:
+        #######flag, img = cap.read()
+
+
+        # считываем значения бегунков
+        h1 = cv.getTrackbarPos('low', 'settings')
+        s1 = cv.getTrackbarPos('high', 'settings')
+
+        # накладываем фильтр на кадр в модели HSV
+
+        #thresh = cv.adaptiveThreshold(img, 255, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY_INV, 1001, 0 + h1 // 10)
+        #thresh = cv.adaptiveThreshold(img, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY_INV, 501, 0 + h1 // 10)
+
+        # ret, thresh = cv2.threshold(img, h1, s1, cv2.THRESH_BINARY)
+        #
+        # kernel = np.ones((25, 25), dtype=np.uint8)
+        # thresh = cv.erode(thresh, kernel)
+        # thresh = cv2.dilate(thresh, kernel)
+
+        ret, thresh = cv2.threshold(img, h1, s1, cv2.THRESH_BINARY)
+        #ret, thresh = cv2.threshold(img, h1, s1, cv2.THRESH_BINARY_INV)
+       # ret, thresh = cv2.threshold(img, h1, s1, cv2.THRESH_TRUNC)
+      #  ret, thresh = cv2.threshold(img, h1, s1, cv2.THRESH_TOZERO)
+       # ret, thresh = cv2.threshold(img, h1, s1, cv2.THRESH_TOZERO_INV)
+
+       # thresh = cv2.medianBlur(thresh, 21)
+        # cv2.resizeWindow('result', 1000, 1000)  # уменьшаем картинку в 3 раза
+        cv2.imshow('result', thresh)
+
+        ch = cv2.waitKey(5)
+        if ch == 27:
+            break
+
+    cv2.destroyAllWindows()
+
+#HSV_analyzer()
+
+binarization()
