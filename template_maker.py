@@ -3,10 +3,10 @@ import cv2 as cv
 from matplotlib import pyplot as plt
 import numpy as np
 
-path = 'C:/Users/Root/Desktop/template_maker/'
-names = ['Screenshot_1.png', 'Screenshot_2.png', 'Screenshot_3.png',
-         'Screenshot_4.png', 'Screenshot_5.png', 'Screenshot_6.png',
-         'Screenshot_7.png']
+#path = 'C:/Users/Root/Desktop/template_maker/'
+#names = ['Screenshot_1.png', 'Screenshot_2.png', 'Screenshot_3.png',
+#         'Screenshot_4.png', 'Screenshot_5.png', 'Screenshot_6.png',
+#         'Screenshot_7.png']
 
 
 # function calculates minimal shape of all images and
@@ -25,33 +25,33 @@ def overlap_images(imgs_path, imgs_name):
     min_height = min(img_shapes, key=lambda item: item[0])[0]  # minimal height of images
     min_width = min(img_shapes, key=lambda item: item[1])[1]    # minumal width of images
 
-    imgs = [cv.GaussianBlur(img, (25, 25), 5) for img in imgs]    # gauss filter for each image
+    imgs = [cv.GaussianBlur(img, (9, 9), 0) for img in imgs]    # gauss filter for each image
 
     # reshaping all images to size of minimal image
     imgs = [img[0:min_height, 0:min_width] for img in imgs]
+    imgs = [np.uint16(img) for img in imgs]
 
     print(f'Minimal image shape:\ny: {min_height}\tx: {min_width}')
 
-    return sum(imgs)        # returning sum of all images
+    res = np.uint8(sum(imgs) // len(imgs))
+    return res       # returning sum of all images
 
 
 def make_overlaped_template():
-    path = 'C:/Users/Root/Desktop/template_maker/'
-    path = 'C:/Users/Root/Desktop/Exposure_experiment/2/'
-    path = 'C:/Users/Root/Documents/MEGAsync/diplom/scans/22.02.2023/res/'
-    # names = [f'2-{i}.tif' for i in range(1, 17)]
-    names = [f'crop_new{i}.tif' for i in range(1, 4)]
-
-    cv.namedWindow("result", cv.WINDOW_NORMAL)  # resize window
-    cv.resizeWindow('result', int(3766 / 9), int(6393 / 9))
+    path = 'C:/Users/Root/Documents/MEGAsync/diplom/scans/10.03.2023/rot/'
+    names = [f'{i}.tif' for i in range(0, 10)]
 
     res = overlap_images(path, names)
+    y, x, _ = res.shape
+    cv.namedWindow("result", cv.WINDOW_NORMAL)  # resize window
+    cv.resizeWindow('result', x // 3, y // 3)
+
     plt.imshow(cv.imread(path + names[0], 0))
     plt.show()
     # res = cv.cvtColor(res, cv.COLOR_BGR2GRAY) # converting to gs
 
     blur = cv.GaussianBlur(res, (25, 25), 5)  # применение фильтра гаусса
-    cv.imshow('result', res)
+    cv.imshow('result', blur)
 
     cv.waitKey(0)
     print(res.shape)
@@ -83,8 +83,7 @@ def calc_avg_square():
     cv.waitKey(0)
 
 
-if __name__ == '__main__':
-
+def old_main():
     template = np.zeros([684, 684], dtype=np.uint8)
     template.fill(121)
 
@@ -113,8 +112,6 @@ if __name__ == '__main__':
 
             template[i][j] += pixel
 
-
-
     for i in range(y):
         lim = 4
         deli = 9
@@ -136,4 +133,14 @@ if __name__ == '__main__':
     cv.imshow('template', template)
 
 
-    cv.waitKey(0)
+if __name__ == '__main__':
+    path = 'C:/Users/Root/Documents/MEGAsync/diplom/scans/10.03.2023/rot/'
+    # names = [f'2-{i}.tif' for i in range(1, 17)]
+    names = [f'{i}.tif' for i in range(0, 10)]
+
+    make_overlaped_template()
+
+
+
+
+
